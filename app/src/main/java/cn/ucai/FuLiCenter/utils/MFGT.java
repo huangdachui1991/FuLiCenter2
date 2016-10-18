@@ -1,9 +1,12 @@
 package cn.ucai.FuLiCenter.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
+import cn.ucai.FuLiCenter.I;
 import cn.ucai.FuLiCenter.R;
+import cn.ucai.FuLiCenter.activity.GoodsDetailActivity;
 import cn.ucai.FuLiCenter.activity.MainActivity;
 
 
@@ -18,7 +21,20 @@ public class MFGT {
     public static void startActivity(Activity context,Class<?> cls){
         Intent intent = new Intent();
         intent.setClass(context,cls);
-        context.startActivity(intent);
-        context.overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+        startActivity(context,intent);
     }
+
+    public static void gotoGoodsDetailsActivity(Context context, int goodsId){
+        Intent intent = new Intent();
+        intent.setClass(context, GoodsDetailActivity.class);
+        intent.putExtra(I.GoodsDetails.KEY_GOODS_ID,goodsId);
+        startActivity(context,intent);
+    }
+
+    public static void startActivity(Context context,Intent intent){
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+    }
+
 }
+

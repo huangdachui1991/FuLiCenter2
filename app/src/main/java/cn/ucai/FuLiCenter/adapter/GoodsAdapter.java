@@ -14,10 +14,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.FuLiCenter.I;
 import cn.ucai.FuLiCenter.R;
 import cn.ucai.FuLiCenter.bean.NewGoodsBean;
 import cn.ucai.FuLiCenter.utils.ImageLoader;
+import cn.ucai.FuLiCenter.utils.MFGT;
 
 /**
  * Created by clawpo on 2016/10/17.
@@ -26,11 +28,21 @@ import cn.ucai.FuLiCenter.utils.ImageLoader;
 public class GoodsAdapter extends Adapter {
     Context mContext;
     List<NewGoodsBean> mList;
+    boolean isMore;
 
     public GoodsAdapter(Context context, List<NewGoodsBean> list) {
         mContext = context;
         mList = new ArrayList<>();
         mList.addAll(list);
+    }
+
+    public boolean isMore() {
+        return isMore;
+    }
+
+    public void setMore(boolean more) {
+        isMore = more;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -47,14 +59,20 @@ public class GoodsAdapter extends Adapter {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if(getItemViewType(position)==I.TYPE_FOOTER){
-
+            FooterViewHolder vh = (FooterViewHolder) holder;
+            vh.mTvFooter.setText(getFootString());
         }else{
             GoodsViewHolder vh = (GoodsViewHolder) holder;
             NewGoodsBean goods = mList.get(position);
             ImageLoader.downloadImg(mContext,vh.mIvGoodsThumb,goods.getGoodsThumb());
             vh.mTvGoodsName.setText(goods.getGoodsName());
             vh.mTvGoodsPrice.setText(goods.getCurrencyPrice());
+            vh.mLayoutGoods.setTag(goods.getGoodsId());
         }
+    }
+
+    private int getFootString() {
+        return isMore?R.string.load_more:R.string.no_more;
     }
 
     @Override
@@ -78,7 +96,12 @@ public class GoodsAdapter extends Adapter {
         notifyDataSetChanged();
     }
 
-    static class GoodsViewHolder extends ViewHolder{
+    public void addData(ArrayList<NewGoodsBean> list) {
+        mList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    class GoodsViewHolder extends ViewHolder{
         @BindView(R.id.ivGoodsThumb)
         ImageView mIvGoodsThumb;
         @BindView(R.id.tvGoodsName)
@@ -91,6 +114,11 @@ public class GoodsAdapter extends Adapter {
         GoodsViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+        @OnClick(R.id.layout_goods)
+        public void onGoodsItemClick(){
+            int goodsId = (int) mLayoutGoods.getTag();
+            MFGT.gotoGoodsDetailsActivity(mContext,goodsId);
         }
     }
 
