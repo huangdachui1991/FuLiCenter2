@@ -38,6 +38,7 @@ public class BoutiqueAdapter extends Adapter {
 
     public void setMore(boolean more) {
         isMore = more;
+        notifyDataSetChanged();
     }
 
     @Override

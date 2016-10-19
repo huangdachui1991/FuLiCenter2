@@ -53,6 +53,7 @@ public class BoutiqueFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_newgoods, container, false);
         ButterKnife.bind(this,layout);
         mContext= (MainActivity) getContext();
+        mList=new ArrayList<>();
         mAdapter=new BoutiqueAdapter(mContext,mList);
         initView();
         initData();
@@ -67,12 +68,12 @@ public class BoutiqueFragment extends Fragment {
         NetDao.downloadBoutique(mContext, new OkHttpUtils.OnCompleteListener<BoutiqueBean[]>() {
             @Override
             public void onSuccess(BoutiqueBean[] result) {
-                ArrayList<BoutiqueBean> list=ConvertUtils.array2List(result);
                 mSrl.setRefreshing(false);
                 mTvRefresh.setVisibility(View.GONE);
                 mAdapter.setMore(true);
                 L.e("result="+result);
                 if(result!=null && result.length>0){
+                    ArrayList<BoutiqueBean> list=ConvertUtils.array2List(result);
                     if(action==I.ACTION_DOWNLOAD || action == I.ACTION_PULL_DOWN) {
                         mAdapter.initData(list);
                     }else{
