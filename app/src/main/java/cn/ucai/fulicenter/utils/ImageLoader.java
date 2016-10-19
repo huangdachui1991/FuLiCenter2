@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.util.LruCache;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -42,6 +43,9 @@ public class ImageLoader {
     private int mDefaultPicId;
     /**ListView、RecyclerView是否在拖拽中，true：拖拽中*/
     boolean mIsDragging;
+
+
+
     public interface OnImageLoadListener {
         void onSuccess(String url, Bitmap bitmap);
 
