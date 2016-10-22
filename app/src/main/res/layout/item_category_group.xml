@@ -13,7 +13,7 @@
         android:layout_marginLeft="20dp"
         android:scaleType="centerCrop"
         android:src="@drawable/nopic"
-        android:background="#00000"
+        android:background="#fff"
         android:layout_centerVertical="true"
         />
     <TextView
