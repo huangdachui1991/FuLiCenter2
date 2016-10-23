@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,7 +103,11 @@ public class MainActivity extends BaseActivity {
                 index = 3;
                 break;
             case R.id.layout_personal_center:
-                index = 4;
+                if(FuLiCenterApplication.getUsername()==null){
+                    MFGT.gotoLogin(this);
+                }else{
+                    index = 4;
+                }
                 break;
         }
         setFragment();
