@@ -98,7 +98,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup viewGroup) {
+    public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup viewGroup) {
         ChildViewHolder holder;
         if (view == null) {
             view = View.inflate(mContext, R.layout.item_category_child, null);
@@ -115,7 +115,10 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
             holder.mlayoutCategoryChild .setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MFGT.gotoCategoryChildActivity(mContext,child.getId());
+                    ArrayList<CategoryChildBean> list = mChildList.get(groupPosition);
+                    String groupName=mGroupList.get(groupPosition).getName();
+
+                    MFGT.gotoCategoryChildActivity(mContext,child.getId(),groupName,list);
                 }
             });
         }
