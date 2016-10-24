@@ -40,11 +40,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_login, R.id.btn_register})
+    //登录注册的按钮点击
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
                 break;
             case R.id.btn_register:
+                //点击注册页面跳转
                 MFGT.gotoRegister(this);
                 break;
         }
