@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#eff2f6"
     android:orientation="vertical" >
-    <include layout="@layout/common_head_title"/>
+    <include layout="@layout/common_head_title_white"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

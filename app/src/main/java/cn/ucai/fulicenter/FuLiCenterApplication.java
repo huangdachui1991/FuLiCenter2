@@ -13,6 +13,7 @@ public class FuLiCenterApplication extends Application {
         super.onCreate();
         application = this;
         instance = this;
+
     }
 
     public static String getUsername() {
