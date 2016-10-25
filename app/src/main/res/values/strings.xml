@@ -24,4 +24,5 @@
     <string name="loging">loging</string>
     <string name="login_fail_unknow_user">login_fail_unknow_user</string>
     <string name="login_fail_error_password">login_fail_error_password</string>
+    <string name="user_database_erro">user database erro!</string>
 </resources>
