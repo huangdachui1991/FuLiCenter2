@@ -15,6 +15,7 @@ import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.Result;
 import cn.ucai.fulicenter.bean.User;
+import cn.ucai.fulicenter.dao.SharePrefrenceUtils;
 import cn.ucai.fulicenter.dao.UserDao;
 import cn.ucai.fulicenter.net.NetDao;
 import cn.ucai.fulicenter.net.OkHttpUtils;
@@ -92,6 +93,7 @@ public class LoginActivity extends BaseActivity {
         final ProgressDialog pd=new ProgressDialog(mContext);
         pd.setMessage(getResources().getString(R.string.loging));
         pd.show();
+        L.e(TAG,"username="+username+",password="+password);
         NetDao.login(mContext, username, password, new OkHttpUtils.OnCompleteListener<String>() {
             @Override
             public void onSuccess(String str) {
@@ -108,10 +110,11 @@ public class LoginActivity extends BaseActivity {
                         //将数据保存在数据库中saveUser
                         boolean isSuccess = dao.saveUser(user);
                         if(isSuccess){
+                            SharePrefrenceUtils.getInstence(mContext).saveUser(user.getMuserName());
                             FuLiCenterApplication.setUser(user);
                             MFGT.finish(mContext);
                         }else {
-                            CommonUtils.showLongToast(R.string.user_database_erro);
+                            CommonUtils.showLongToast(R.string.user_database_error);
                         }
                     }else {
                         if(result.getRetCode()==I.MSG_LOGIN_UNKNOW_USER){

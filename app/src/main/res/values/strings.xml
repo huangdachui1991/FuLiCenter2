@@ -21,8 +21,21 @@
     <string name="register_success">register success</string>
     <string name="register_fail_exists">user name exists</string>
     <string name="login">Login</string>
-    <string name="loging">loging</string>
-    <string name="login_fail_unknow_user">login_fail_unknow_user</string>
-    <string name="login_fail_error_password">login_fail_error_password</string>
-    <string name="user_database_erro">user database erro!</string>
+    <string name="login_fail">login fail</string>
+    <string name="logining">logining</string>
+    <string name="login_fail_unknow_user">login fail,unknow username</string>
+    <string name="login_fail_error_password">login fail,error password</string>
+    <string name="user_database_error">user database error</string>
+    <string name="logout">logout</string>
+    <string name="user_profile_avatar">user avatar</string>
+    <string name="username_connot_be_modify">username connot be modify</string>
+    <string name="user_profile">user profile</string>
+    <string name="save">save</string>
+    <string name="update_user_nick">update user nick</string>
+    <string name="update_fail">update fail</string>
+    <string name="update_nick_fail_unmodify">user nick unmodify</string>
+    <string name="update_user_nick_success">update user nick success</string>
+    <string name="update_user_avatar">update user avatar</string>
+    <string name="update_user_avatar_fail">update user avatar fail</string>
+    <string name="update_user_avatar_success">update user avatar success</string>
 </resources>
