@@ -136,13 +136,13 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK && requestCode== I.REQUEST_CODE_REGISTER){
+        if(resultCode == RESULT_OK && requestCode == I.REQUEST_CODE_REGISTER){
             String name = data.getStringExtra(I.User.USER_NAME);
             musername.setText(name);
         }
     }
+
 }

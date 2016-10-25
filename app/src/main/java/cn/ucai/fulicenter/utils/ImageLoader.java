@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.util.LruCache;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import java.net.URLEncoder;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.bean.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -43,9 +43,6 @@ public class ImageLoader {
     private int mDefaultPicId;
     /**ListView、RecyclerView是否在拖拽中，true：拖拽中*/
     boolean mIsDragging;
-
-
-
     public interface OnImageLoadListener {
         void onSuccess(String url, Bitmap bitmap);
 
@@ -360,6 +357,26 @@ public class ImageLoader {
                 .defaultPicture(R.drawable.nopic)
                 .imageView(imageView)
                 .setDragging(isDragging)
+                .showImage(context);
+    }
+    //http://101.251.196.90:8000/FuLiCenterServerV2.0/downloadAvatar?
+    // name_or_hxid=a952700&avatarType=user_avatar&m_avatar_suffix=.jpg&width=200&height=200
+    //http://101.251.196.90:8000/FuLiCenterServerV2.0/downloadAvatar?
+    // name_or_hxid=a952700&avatarType=0&m_avatar_suffix=.jpg&width=200&height=200
+    public static String getAvatarUrl(User user){
+        if(user!=null) {
+            String url = I.DOWNLOAD_AVATAR_URL + I.NAME_OR_HXID + "=" + user.getMuserName()
+                    + I.AND + I.AVATAR_TYPE + "=" + user.getMavatarPath() + I.AND + I.AVATAR_SUFFIX
+                    + "=" + user.getMavatarSuffix() + I.AND + "width=200&height=200";
+            L.e("useravatar=" + url);
+            return url;
+        }
+        return null;
+    }
+    public static void setAvatar(String url,Context context,ImageView imageView){
+        ImageLoader.build(url)
+                .defaultPicture(R.drawable.contactlogo)
+                .imageView(imageView)
                 .showImage(context);
     }
 }
