@@ -1,10 +1,13 @@
 package cn.ucai.fulicenter.bean;
 
+import cn.ucai.fulicenter.I;
+
 /**
- * Created by huangdachui on 2016/10/25.
+ * Created by clawpo on 2016/10/21.
  */
 
 public class User {
+
     /**
      * muserName : a952700
      * muserNick : 士大夫
@@ -56,7 +59,7 @@ public class User {
     }
 
     public String getMavatarSuffix() {
-        return mavatarSuffix;
+        return mavatarSuffix!=null?mavatarSuffix: I.AVATAR_SUFFIX_JPG;
     }
 
     public void setMavatarSuffix(String mavatarSuffix) {

@@ -61,14 +61,14 @@ public class DBManager {
         return user;
     }
     public synchronized boolean updateUser(User user){
-        int result=-1;
-        SQLiteDatabase db=dbHelper.getWritableDatabase();
-        String sql=UserDao.USER_COLUMN_NAME+"=?";
-        ContentValues values=new ContentValues();
+        int resule=-1;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql = UserDao.USER_COLUMN_NAME+"=?";
+        ContentValues values = new ContentValues();
         values.put(UserDao.USER_COLUMN_NICK,user.getMuserNick());
         if(db.isOpen()){
-            result=db.update(UserDao.USER_TABLE_NAME,values,sql,new String[]{user.getMuserName()});
+            resule = db.update(UserDao.USER_TABLE_NAME,values,sql,new String[]{user.getMuserName()});
         }
-        return result>0;
+        return resule>0;
     }
 }
