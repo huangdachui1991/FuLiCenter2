@@ -39,4 +39,5 @@
     <string name="update_user_avatar_fail">update user avatar fail</string>
     <string name="update_user_avatar_success">update user avatar success</string>
     <string name="loging">loging</string>
+    <string name="user_frofile">个人资料</string>
 </resources>

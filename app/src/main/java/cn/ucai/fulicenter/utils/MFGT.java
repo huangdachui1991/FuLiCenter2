@@ -14,8 +14,10 @@ import cn.ucai.fulicenter.activity.GoodsDetailActivity;
 import cn.ucai.fulicenter.activity.LoginActivity;
 import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.activity.RegisterActivity;
+import cn.ucai.fulicenter.activity.UserProfileActivity;
 import cn.ucai.fulicenter.bean.BoutiqueBean;
 import cn.ucai.fulicenter.bean.CategoryChildBean;
+
 
 
 public class MFGT {
@@ -43,18 +45,22 @@ public class MFGT {
         context.startActivity(intent);
         ((Activity)context).overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
     }
+
+
     public static void gotoBoutiqueChildActivity(Context context, BoutiqueBean bean){
         Intent intent = new Intent();
         intent.setClass(context, BoutiqueChildActivity.class);
         intent.putExtra(I.Boutique.CAT_ID,bean);
         startActivity(context,intent);
     }
+
+
     public static void gotoCategoryChildActivity(Context context, int catId, String groupName, ArrayList<CategoryChildBean> list){
         Intent intent = new Intent();
         intent.setClass(context, CategoryChildActivity.class);
         intent.putExtra(I.CategoryChild.CAT_ID,catId);
         intent.putExtra(I.CategoryGroup.NAME,groupName);
-        intent.putExtra(I.CategoryChild.ID, list);
+        intent.putExtra(I.CategoryChild.ID,list);
         startActivity(context,intent);
     }
 
@@ -64,15 +70,20 @@ public class MFGT {
         startActivityForResult(context,intent,I.REQUEST_CODE_LOGIN);
     }
 
-    public static void gotoRegister(Activity context) {
-        Intent intent=new Intent();
+    public static void gotoRegister(Activity context){
+        Intent intent = new Intent();
         intent.setClass(context,RegisterActivity.class);
-        startActivityForResult(context,intent, I.REQUEST_CODE_REGISTER);
+        startActivityForResult(context,intent,I.REQUEST_CODE_REGISTER);
     }
-    public static void startActivityForResult(Activity context , Intent intent,int rquestCode) {
-        context.startActivityForResult(intent,I.REQUEST_CODE_REGISTER);
+
+
+    public static void startActivityForResult(Activity context,Intent intent,int requestCode){
+        context.startActivityForResult(intent,requestCode);
         context.overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
     }
 
+    public static void gotoSettings(Activity context) {
+        startActivity(context, UserProfileActivity.class);
+    }
 
 }
