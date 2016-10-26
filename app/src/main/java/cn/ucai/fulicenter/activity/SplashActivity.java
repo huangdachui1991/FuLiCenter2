@@ -15,7 +15,6 @@ import cn.ucai.fulicenter.utils.MFGT;
 public class SplashActivity extends AppCompatActivity {
     private static final String TAG = SplashActivity .class.getSimpleName();
 
-
     private final long sleepTime = 2000;
     SplashActivity mContext;
 

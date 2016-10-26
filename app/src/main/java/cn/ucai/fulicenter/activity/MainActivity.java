@@ -4,16 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cn.ucai.fulicenter.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.fragment.CategoryFragment;
 import cn.ucai.fulicenter.fragment.NewGoodsFragment;
@@ -23,8 +22,6 @@ import cn.ucai.fulicenter.utils.MFGT;
 
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-
-
 
     @BindView(R.id.layout_new_good)
     RadioButton mLayoutNewGood;
@@ -46,8 +43,7 @@ public class MainActivity extends BaseActivity {
     NewGoodsFragment mNewGoodsFragment;
     BoutiqueFragment mBoutiqueFragment;
     CategoryFragment mCategoryFragment;
-    PersonalCenterFragment mPersonalCneterFragment;
-
+    PersonalCenterFragment mPersonalCenterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +56,13 @@ public class MainActivity extends BaseActivity {
     private void initFragment() {
         mFragments = new Fragment[5];
         mNewGoodsFragment = new NewGoodsFragment();
-        mBoutiqueFragment =new BoutiqueFragment();
+        mBoutiqueFragment = new BoutiqueFragment();
         mCategoryFragment = new CategoryFragment();
-        mPersonalCneterFragment = new PersonalCenterFragment();
+        mPersonalCenterFragment = new PersonalCenterFragment();
         mFragments[0] = mNewGoodsFragment;
         mFragments[1] = mBoutiqueFragment;
         mFragments[2] = mCategoryFragment;
-        mFragments[4] = mPersonalCneterFragment;
+        mFragments[4] = mPersonalCenterFragment;
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container,mNewGoodsFragment)
@@ -77,6 +73,7 @@ public class MainActivity extends BaseActivity {
                 .show(mNewGoodsFragment)
                 .commit();
     }
+
     @Override
     protected void initView() {
         rbs = new RadioButton[5];
@@ -112,9 +109,9 @@ public class MainActivity extends BaseActivity {
                 index = 3;
                 break;
             case R.id.layout_personal_center:
-                if (FuLiCenterApplication.getUsername() == null) {
+                if(FuLiCenterApplication.getUser()==null){
                     MFGT.gotoLogin(this);
-                } else {
+                }else {
                     index = 4;
                 }
                 break;
@@ -123,7 +120,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setFragment() {
-        if(index!=currentIndex){
+        if(index!=currentIndex) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.hide(mFragments[currentIndex]);
             if(!mFragments[index].isAdded()){
@@ -132,7 +129,7 @@ public class MainActivity extends BaseActivity {
             ft.show(mFragments[index]).commit();
         }
         setRadioButtonStatus();
-        currentIndex=index;
+        currentIndex = index;
     }
 
     private void setRadioButtonStatus() {
@@ -145,21 +142,26 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
-    public void onBackPressed() {
+    public void onBackPressed(){
         finish();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         L.e(TAG,"onResume...");
+        if(index==4 &&FuLiCenterApplication.getUser()==null ){
+            index=0;
+        }
         setFragment();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //点击个人中心登陆，并且登陆成功让 index=4.
         super.onActivityResult(requestCode, resultCode, data);
-        L.e(TAG,"onActivityResult,requestCode="+requestCode);
-        if(requestCode == I.REQUEST_CODE_LOGIN && FuLiCenterApplication.getUser()!=null){
+        L.e(TAG, "onActivityResult,requestCode=" + requestCode);
+        if (requestCode == I.REQUEST_CODE_LOGIN && FuLiCenterApplication.getUser() != null) {
             index = 4;
         }
     }
