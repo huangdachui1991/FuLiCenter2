@@ -31,38 +31,31 @@ import cn.ucai.fulicenter.view.SpaceItemDecoration;
 public class CategoryChildActivity extends BaseActivity {
 
     @BindView(R.id.tv_refresh)
-    TextView mtvRefresh;
+    TextView mTvRefresh;
     @BindView(R.id.rv)
-    RecyclerView mrv;
+    RecyclerView mRv;
     @BindView(R.id.srl)
-    SwipeRefreshLayout msrl;
+    SwipeRefreshLayout mSrl;
 
     CategoryChildActivity mContext;
     GoodsAdapter mAdapter;
     ArrayList<NewGoodsBean> mList;
     int pageId = 1;
     GridLayoutManager glm;
-
     int catId;
     @BindView(R.id.btn_sort_price)
-    Button mbtnSortPrice;
+    Button mBtnSortPrice;
     @BindView(R.id.btn_sort_addtime)
-    Button mbtnSortAddtime;
-    @BindView(R.id.btnCatChildFilter)
-    CatChildFilterButton mbtnCatChildFilter;
-
-    //排序用
+    Button mBtnSortAddtime;
     boolean addTimeAsc = false;
     boolean priceAsc = false;
     int sortBy = I.SORT_BY_ADDTIME_DESC;
-
-    //title用
+    @BindView(R.id.btnCatChildFilter)
+    CatChildFilterButton mBtnCatChildFilter;
     String groupName;
     ArrayList<CategoryChildBean> mChildList;
 
-
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_category_child);
         ButterKnife.bind(this);
@@ -73,31 +66,25 @@ public class CategoryChildActivity extends BaseActivity {
         if (catId == 0) {
             finish();
         }
-        groupName=getIntent().getStringExtra(I.CategoryGroup.NAME);
-        mChildList= (ArrayList<CategoryChildBean>) getIntent().getSerializableExtra(I.CategoryChild.ID);
+        groupName = getIntent().getStringExtra(I.CategoryGroup.NAME);
+        mChildList = (ArrayList<CategoryChildBean>) getIntent().getSerializableExtra(I.CategoryChild.ID);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected void initView() {
-        msrl.setColorSchemeColors(
+        mSrl.setColorSchemeColors(
                 getResources().getColor(R.color.google_blue),
                 getResources().getColor(R.color.google_green),
                 getResources().getColor(R.color.google_red),
                 getResources().getColor(R.color.google_yellow)
         );
         glm = new GridLayoutManager(mContext, I.COLUM_NUM);
-        mrv.setLayoutManager(glm);
-        mrv.setHasFixedSize(true);
-        mrv.setAdapter(mAdapter);
-        mrv.addItemDecoration(new SpaceItemDecoration(12));
-        mbtnCatChildFilter.setText(groupName);
-    }
-
-    @Override
-    protected void initData() {
-        downloadCategoryGoods(I.ACTION_DOWNLOAD);
-        mbtnCatChildFilter.setOnCatFilterClickListener(groupName,mChildList);
+        mRv.setLayoutManager(glm);
+        mRv.setHasFixedSize(true);
+        mRv.setAdapter(mAdapter);
+        mRv.addItemDecoration(new SpaceItemDecoration(12));
+        mBtnCatChildFilter.setText(groupName);
     }
 
     @Override
@@ -107,11 +94,11 @@ public class CategoryChildActivity extends BaseActivity {
     }
 
     private void setPullDownListener() {
-        msrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                msrl.setRefreshing(true);
-                mtvRefresh.setVisibility(View.VISIBLE);
+                mSrl.setRefreshing(true);
+                mTvRefresh.setVisibility(View.VISIBLE);
                 pageId = 1;
                 downloadCategoryGoods(I.ACTION_PULL_DOWN);
             }
@@ -122,8 +109,8 @@ public class CategoryChildActivity extends BaseActivity {
         NetDao.downloadCategoryGoods(mContext, catId, pageId, new OkHttpUtils.OnCompleteListener<NewGoodsBean[]>() {
             @Override
             public void onSuccess(NewGoodsBean[] result) {
-                msrl.setRefreshing(false);
-                mtvRefresh.setVisibility(View.GONE);
+                mSrl.setRefreshing(false);
+                mTvRefresh.setVisibility(View.GONE);
                 mAdapter.setMore(true);
                 L.e("result=" + result);
                 if (result != null && result.length > 0) {
@@ -143,8 +130,8 @@ public class CategoryChildActivity extends BaseActivity {
 
             @Override
             public void onError(String error) {
-                msrl.setRefreshing(false);
-                mtvRefresh.setVisibility(View.GONE);
+                mSrl.setRefreshing(false);
+                mTvRefresh.setVisibility(View.GONE);
                 mAdapter.setMore(false);
                 CommonUtils.showShortToast(error);
                 L.e("error:" + error);
@@ -153,7 +140,7 @@ public class CategoryChildActivity extends BaseActivity {
     }
 
     private void setPullUpListener() {
-        mrv.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -170,9 +157,15 @@ public class CategoryChildActivity extends BaseActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int firstPosition = glm.findFirstVisibleItemPosition();
-                msrl.setEnabled(firstPosition == 0);
+                mSrl.setEnabled(firstPosition == 0);
             }
         });
+    }
+
+    @Override
+    protected void initData() {
+        downloadCategoryGoods(I.ACTION_DOWNLOAD);
+        mBtnCatChildFilter.setOnCatFilterClickListener(groupName,mChildList);
     }
 
     @OnClick(R.id.backClickArea)
@@ -187,14 +180,13 @@ public class CategoryChildActivity extends BaseActivity {
             case R.id.btn_sort_price:
                 if (priceAsc) {
                     sortBy = I.SORT_BY_PRICE_ASC;
-                    //设置排序箭头
                     right = getResources().getDrawable(R.mipmap.arrow_order_up);
                 } else {
                     sortBy = I.SORT_BY_PRICE_DESC;
                     right = getResources().getDrawable(R.mipmap.arrow_order_down);
                 }
                 right.setBounds(0, 0, right.getIntrinsicWidth(), right.getIntrinsicHeight());
-                mbtnSortPrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, right, null);
+                mBtnSortPrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, right, null);
                 priceAsc = !priceAsc;
                 break;
             case R.id.btn_sort_addtime:
@@ -203,14 +195,13 @@ public class CategoryChildActivity extends BaseActivity {
                     right = getResources().getDrawable(R.mipmap.arrow_order_up);
                 } else {
                     sortBy = I.SORT_BY_ADDTIME_DESC;
-
                     right = getResources().getDrawable(R.mipmap.arrow_order_down);
                 }
                 right.setBounds(0, 0, right.getIntrinsicWidth(), right.getIntrinsicHeight());
-                mbtnSortAddtime.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, right, null);
+                mBtnSortAddtime.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, right, null);
                 addTimeAsc = !addTimeAsc;
                 break;
         }
-        mAdapter.setSortBy(sortBy);
+        mAdapter.setSoryBy(sortBy);
     }
 }

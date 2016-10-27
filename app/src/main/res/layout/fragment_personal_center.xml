@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/fragment_bg" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/fragment_bg" >
     <RelativeLayout
         android:id="@+id/center_top"
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                         android:layout_marginLeft="10dp"
                         android:textSize="18sp"
                         android:layout_toRightOf="@id/iv_user_avatar"
-                        android:text="用户名"
+                        android:text="恋上猫女衣坊"
                         android:textColor="@color/white" />
                     <ImageView
                         android:id="@+id/iv_user_qrcode"
@@ -101,7 +101,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="180"
+                                android:text="0"
                                 android:textColor="@color/white" />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="28"
+                                android:text="0"
                                 android:textColor="@color/white" />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -151,7 +151,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="58"
+                                android:text="0"
                                 android:textColor="@color/white" />
                             <TextView
                                 android:layout_width="wrap_content"

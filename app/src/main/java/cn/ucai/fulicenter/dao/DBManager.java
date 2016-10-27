@@ -9,14 +9,13 @@ import cn.ucai.fulicenter.bean.User;
 
 
 public class DBManager {
-    private static DBManager dbManager=new DBManager();
-    private  DBOpenHelper dbHelper;
+    private static DBManager dbMgr = new DBManager();
+    private DBOpenHelper dbHelper;
     void onInit(Context context){
-        dbHelper=new DBOpenHelper(context);
+        dbHelper = new DBOpenHelper(context);
     }
-
     public static synchronized DBManager getInstance(){
-        return dbManager;
+        return dbMgr;
     }
 
     public synchronized void closeDB(){
@@ -60,6 +59,7 @@ public class DBManager {
         }
         return user;
     }
+
     public synchronized boolean updateUser(User user){
         int resule=-1;
         SQLiteDatabase db = dbHelper.getWritableDatabase();

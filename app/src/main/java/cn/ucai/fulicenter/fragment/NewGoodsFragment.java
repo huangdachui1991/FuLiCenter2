@@ -2,7 +2,6 @@ package cn.ucai.fulicenter.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,14 +44,17 @@ public class NewGoodsFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        L.e("NewGoodsFragment.onCreateView");
         View layout = inflater.inflate(R.layout.fragment_newgoods, container, false);
         ButterKnife.bind(this, layout);
         mContext = (MainActivity) getContext();
         mList = new ArrayList<>();
-        mAdapter = new GoodsAdapter(mContext, mList);
-        super.onCreateView(inflater, container, savedInstanceState);
+        mAdapter = new GoodsAdapter(mContext,mList);
+        super.onCreateView(inflater,container,savedInstanceState);
         return layout;
     }
+
     @Override
     protected void setListener() {
         setPullUpListener();
@@ -72,13 +74,12 @@ public class NewGoodsFragment extends BaseFragment {
     }
 
     private void downloadNewGoods(final int action) {
-        NetDao.downloadNewGoods(mContext,I.CAT_ID , pageId, new OkHttpUtils.OnCompleteListener<NewGoodsBean[]>() {
+        NetDao.downloadNewGoods(mContext,I.CAT_ID, pageId, new OkHttpUtils.OnCompleteListener<NewGoodsBean[]>() {
             @Override
             public void onSuccess(NewGoodsBean[] result) {
                 mSrl.setRefreshing(false);
                 mTvRefresh.setVisibility(View.GONE);
                 mAdapter.setMore(true);
-                L.e("result="+result);
                 if(result!=null && result.length>0){
                     ArrayList<NewGoodsBean> list = ConvertUtils.array2List(result);
                     if(action==I.ACTION_DOWNLOAD || action == I.ACTION_PULL_DOWN) {
@@ -127,6 +128,7 @@ public class NewGoodsFragment extends BaseFragment {
             }
         });
     }
+
     @Override
     protected void initData() {
         downloadNewGoods(I.ACTION_DOWNLOAD);

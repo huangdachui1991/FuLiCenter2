@@ -7,14 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by huangdachui on 2016/10/21.
- */
+import cn.ucai.fulicenter.utils.L;
 
-public abstract class BaseFragment extends Fragment{
+
+public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        L.e("BaseFragment.onCreateView");
         initView();
         initData();
         setListener();
@@ -22,9 +22,6 @@ public abstract class BaseFragment extends Fragment{
     }
 
     protected abstract void initView();
-
     protected abstract void initData();
-
     protected abstract void setListener();
-
 }

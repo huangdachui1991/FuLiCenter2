@@ -1,9 +1,5 @@
 package cn.ucai.fulicenter.view;
 
-/**
- * Created by huangdachui on 2016/10/20.
- */
-
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;

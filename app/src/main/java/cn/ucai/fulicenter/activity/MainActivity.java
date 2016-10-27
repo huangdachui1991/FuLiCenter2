@@ -150,18 +150,17 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         L.e(TAG,"onResume...");
-        if(index==4 &&FuLiCenterApplication.getUser()==null ){
-            index=0;
+        if(index == 4 && FuLiCenterApplication.getUser()==null){
+            index = 0;
         }
         setFragment();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //点击个人中心登陆，并且登陆成功让 index=4.
         super.onActivityResult(requestCode, resultCode, data);
-        L.e(TAG, "onActivityResult,requestCode=" + requestCode);
-        if (requestCode == I.REQUEST_CODE_LOGIN && FuLiCenterApplication.getUser() != null) {
+        L.e(TAG,"onActivityResult,requestCode="+requestCode);
+        if(requestCode == I.REQUEST_CODE_LOGIN && FuLiCenterApplication.getUser()!=null){
             index = 4;
         }
     }

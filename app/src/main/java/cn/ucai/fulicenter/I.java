@@ -55,7 +55,6 @@ public interface I {
     int CATEGORY_GOOD=1;
     int CAT_ID=0;
 
-
     interface Goods {
         String KEY_RESULT = "result";
         String RESPONSE_SUCCESS = "success";

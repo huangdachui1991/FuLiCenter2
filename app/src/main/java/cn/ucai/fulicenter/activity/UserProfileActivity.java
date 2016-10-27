@@ -38,15 +38,14 @@ public class UserProfileActivity extends BaseActivity {
     TextView mtvUserProfileNick;
 
     UserProfileActivity mContext;
-    User user=null;
+    User user = null;
     OnSetAvatarListener mOnSetAvatarListener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
-        mContext=this;
+        mContext = this;
         super.onCreate(savedInstanceState);
     }
 
@@ -57,7 +56,7 @@ public class UserProfileActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        user= FuLiCenterApplication.getUser();
+        user = FuLiCenterApplication.getUser();
         if(user==null){
             finish();
             return;
@@ -84,10 +83,18 @@ public class UserProfileActivity extends BaseActivity {
                 MFGT.gotoUpdateNick(mContext);
                 break;
             case R.id.btn_logout:
-                //点击退出登录的方法
                 logout();
                 break;
         }
+    }
+
+    private void logout() {
+        if(user!=null){
+            SharePrefrenceUtils.getInstence(mContext).removeUser();
+            FuLiCenterApplication.setUser(null);
+            MFGT.gotoLogin(mContext);
+        }
+        finish();
     }
 
     @Override
@@ -103,10 +110,12 @@ public class UserProfileActivity extends BaseActivity {
         if(resultCode!=RESULT_OK){
             return;
         }
-        mOnSetAvatarListener.setAvatar(requestCode,data,mivUserProfileAvatar);
         if(requestCode== I.REQUEST_CODE_NICK){
             CommonUtils.showLongToast(R.string.update_user_nick_success);
+            return;
         }
+        mOnSetAvatarListener.setAvatar(requestCode,data,mivUserProfileAvatar);
+
         if(requestCode==OnSetAvatarListener.REQUEST_CROP_PHOTO){
             updateAvatar();
         }
@@ -116,8 +125,8 @@ public class UserProfileActivity extends BaseActivity {
         //file=/storage/emulated/0/Android/data/cn.ucai.fulicenter/files/Pictures/a952700
         //file=/storage/emulated/0/Android/data/cn.ucai.fulicenter/files/Pictures/user_avatar/a952700.jpg
         File file = new File(OnSetAvatarListener.getAvatarPath(mContext,
-                user.getMavatarPath()+"/"+user.getMuserName()+I.AVATAR_SUFFIX_JPG));
-
+                user.getMavatarPath()+"/"+user.getMuserName()
+                +I.AVATAR_SUFFIX_JPG));
         L.e("file="+file.exists());
         L.e("file="+file.getAbsolutePath());
         final ProgressDialog pd = new ProgressDialog(mContext);
@@ -153,18 +162,10 @@ public class UserProfileActivity extends BaseActivity {
         });
     }
 
-    private void logout() {
-        if(user!=null){
-            SharePrefrenceUtils.getInstence(mContext).removeUser();
-            FuLiCenterApplication.setUser(null);
-            MFGT.gotoLogin(mContext);
-        }
-        finish();
-    }
     private void showInfo(){
-        user= FuLiCenterApplication.getUser();
+        user = FuLiCenterApplication.getUser();
         if(user!=null){
-            ImageLoader.setAvatar(ImageLoader.getAvatarUrl(user), mContext, mivUserProfileAvatar);
+            ImageLoader.setAvatar(ImageLoader.getAvatarUrl(user),mContext,mivUserProfileAvatar);
             mtvUserProfileName.setText(user.getMuserName());
             mtvUserProfileNick.setText(user.getMuserNick());
         }

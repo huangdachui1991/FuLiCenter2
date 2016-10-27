@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.bean.CollectBean;
 import cn.ucai.fulicenter.bean.NewGoodsBean;
 import cn.ucai.fulicenter.utils.ImageLoader;
 import cn.ucai.fulicenter.utils.MFGT;
@@ -28,13 +30,13 @@ import cn.ucai.fulicenter.view.FooterViewHolder;
  * Created by clawpo on 2016/10/17.
  */
 
-public class GoodsAdapter extends Adapter {
+public class CollectsAdapter extends Adapter {
     Context mContext;
-    List<NewGoodsBean> mList;
+    List<CollectBean> mList;
     boolean isMore;
     int soryBy = I.SORT_BY_ADDTIME_DESC;
 
-    public GoodsAdapter(Context context, List<NewGoodsBean> list) {
+    public CollectsAdapter(Context context, List<CollectBean> list) {
         mContext = context;
         mList = new ArrayList<>();
         mList.addAll(list);
@@ -42,7 +44,6 @@ public class GoodsAdapter extends Adapter {
 
     public void setSoryBy(int soryBy) {
         this.soryBy = soryBy;
-        sortBy();
         notifyDataSetChanged();
     }
 
@@ -61,7 +62,7 @@ public class GoodsAdapter extends Adapter {
         if (viewType == I.TYPE_FOOTER) {
             holder = new FooterViewHolder(View.inflate(mContext, R.layout.item_footer, null));
         } else {
-            holder = new GoodsViewHolder(View.inflate(mContext, R.layout.item_goods, null));
+            holder = new CollectsViewHolder(View.inflate(mContext, R.layout.item_collects, null));
         }
         return holder;
     }
@@ -72,11 +73,10 @@ public class GoodsAdapter extends Adapter {
             FooterViewHolder vh = (FooterViewHolder) holder;
             vh.mTvFooter.setText(getFootString());
         }else{
-            GoodsViewHolder vh = (GoodsViewHolder) holder;
-            NewGoodsBean goods = mList.get(position);
+            CollectsViewHolder vh = (CollectsViewHolder) holder;
+            CollectBean goods = mList.get(position);
             ImageLoader.downloadImg(mContext,vh.mIvGoodsThumb,goods.getGoodsThumb());
             vh.mTvGoodsName.setText(goods.getGoodsName());
-            vh.mTvGoodsPrice.setText(goods.getCurrencyPrice());
             vh.mLayoutGoods.setTag(goods.getGoodsId());
         }
     }
@@ -98,7 +98,7 @@ public class GoodsAdapter extends Adapter {
         return I.TYPE_ITEM;
     }
 
-    public void initData(ArrayList<NewGoodsBean> list) {
+    public void initData(ArrayList<CollectBean> list) {
         if(mList!=null){
             mList.clear();
         }
@@ -106,22 +106,22 @@ public class GoodsAdapter extends Adapter {
         notifyDataSetChanged();
     }
 
-    public void addData(ArrayList<NewGoodsBean> list) {
+    public void addData(ArrayList<CollectBean> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }
 
-    class GoodsViewHolder extends ViewHolder{
+    class CollectsViewHolder extends ViewHolder{
         @BindView(R.id.ivGoodsThumb)
         ImageView mIvGoodsThumb;
         @BindView(R.id.tvGoodsName)
         TextView mTvGoodsName;
-        @BindView(R.id.tvGoodsPrice)
-        TextView mTvGoodsPrice;
+        @BindView(R.id.iv_collect_delete)
+        ImageView mIvcollectdelete;
         @BindView(R.id.layout_goods)
-        LinearLayout mLayoutGoods;
+        RelativeLayout mLayoutGoods;
 
-        GoodsViewHolder(View view) {
+        CollectsViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
@@ -131,33 +131,4 @@ public class GoodsAdapter extends Adapter {
             MFGT.gotoGoodsDetailsActivity(mContext,goodsId);
         }
     }
-
-    private void sortBy(){
-        Collections.sort(mList, new Comparator<NewGoodsBean>() {
-            @Override
-            public int compare(NewGoodsBean left, NewGoodsBean right) {
-                int result=0;
-                switch (soryBy){
-                    case I.SORT_BY_ADDTIME_ASC:
-                        result= (int) (Long.valueOf(left.getAddTime())-Long.valueOf(right.getAddTime()));
-                        break;
-                    case I.SORT_BY_ADDTIME_DESC:
-                        result= (int) (Long.valueOf(right.getAddTime())-Long.valueOf(left.getAddTime()));
-                        break;
-                    case I.SORT_BY_PRICE_ASC:
-                        result = getPrice(left.getCurrencyPrice())-getPrice(right.getCurrencyPrice());
-                        break;
-                    case I.SORT_BY_PRICE_DESC:
-                        result = getPrice(right.getCurrencyPrice())-getPrice(left.getCurrencyPrice());
-                        break;
-                }
-                return result;
-            }
-            private int getPrice(String price){
-                price = price.substring(price.indexOf("￥")+1);
-                return Integer.valueOf(price);
-            }
-        });
-    }
-
 }

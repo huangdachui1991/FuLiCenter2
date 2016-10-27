@@ -3,10 +3,6 @@ package cn.ucai.fulicenter.dao;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
- * Created by huangdachui on 2016/10/26.
- */
-
 public class SharePrefrenceUtils {
     private static final String SHARE_NAME = "saveUserInfo";
     private static SharePrefrenceUtils instance;

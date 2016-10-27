@@ -1,7 +1,6 @@
 package cn.ucai.fulicenter.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,21 +23,21 @@ import cn.ucai.fulicenter.view.SlideAutoLoopView;
 public class GoodsDetailActivity extends BaseActivity {
 
     @BindView(R.id.backClickArea)
-    LinearLayout mBackClickArea;
+    LinearLayout mbackClickArea;
     @BindView(R.id.tv_good_name_english)
-    TextView mTvGoodNameEnglish;
+    TextView mtvGoodNameEnglish;
     @BindView(R.id.tv_good_name)
-    TextView mTvGoodName;
+    TextView mtvGoodName;
     @BindView(R.id.tv_good_price_shop)
-    TextView mTvGoodPriceShop;
+    TextView mtvGoodPriceShop;
     @BindView(R.id.tv_good_price_current)
-    TextView mTvGoodPriceCurrent;
+    TextView mtvGoodPriceCurrent;
     @BindView(R.id.salv)
-    SlideAutoLoopView mSalv;
+    SlideAutoLoopView msalv;
     @BindView(R.id.indicator)
-    FlowIndicator mIndicator;
+    FlowIndicator mindicator;
     @BindView(R.id.wv_good_brief)
-    WebView mWvGoodBrief;
+    WebView mwvGoodBrief;
 
     int goodsId;
     GoodsDetailActivity mContext;
@@ -62,7 +61,7 @@ public class GoodsDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void initData() {
+    protected  void initData() {
         NetDao.downloadGoodsDetail(mContext, goodsId, new OkHttpUtils.OnCompleteListener<GoodsDetailsBean>() {
             @Override
             public void onSuccess(GoodsDetailsBean result) {
@@ -84,12 +83,12 @@ public class GoodsDetailActivity extends BaseActivity {
     }
 
     private void showGoodDetails(GoodsDetailsBean details) {
-        mTvGoodNameEnglish.setText(details.getGoodsEnglishName());
-        mTvGoodName.setText(details.getGoodsName());
-        mTvGoodPriceCurrent.setText(details.getCurrencyPrice());
-        mTvGoodPriceShop.setText(details.getShopPrice());
-        mSalv.startPlayLoop(mIndicator,getAlbumImgUrl(details),getAlbumImgCount(details));
-        mWvGoodBrief.loadDataWithBaseURL(null,details.getGoodsBrief(),I.TEXT_HTML,I.UTF_8,null);
+        mtvGoodNameEnglish.setText(details.getGoodsEnglishName());
+        mtvGoodName.setText(details.getGoodsName());
+        mtvGoodPriceCurrent.setText(details.getCurrencyPrice());
+        mtvGoodPriceShop.setText(details.getShopPrice());
+        msalv.startPlayLoop(mindicator,getAlbumImgUrl(details),getAlbumImgCount(details));
+        mwvGoodBrief.loadDataWithBaseURL(null,details.getGoodsBrief(),I.TEXT_HTML,I.UTF_8,null);
     }
 
     private int getAlbumImgCount(GoodsDetailsBean details) {
@@ -112,7 +111,7 @@ public class GoodsDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void initView() {
+    protected  void initView() {
 
     }
 

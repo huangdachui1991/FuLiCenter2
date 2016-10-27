@@ -11,68 +11,65 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.adapter.CollectsAdapter;
 import cn.ucai.fulicenter.adapter.GoodsAdapter;
-import cn.ucai.fulicenter.bean.BoutiqueBean;
+import cn.ucai.fulicenter.bean.CollectBean;
 import cn.ucai.fulicenter.bean.NewGoodsBean;
+import cn.ucai.fulicenter.bean.User;
 import cn.ucai.fulicenter.net.NetDao;
 import cn.ucai.fulicenter.net.OkHttpUtils;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.ConvertUtils;
 import cn.ucai.fulicenter.utils.L;
-import cn.ucai.fulicenter.utils.MFGT;
+import cn.ucai.fulicenter.view.DisplayUtils;
 import cn.ucai.fulicenter.view.SpaceItemDecoration;
 
-public class BoutiqueChildActivity extends BaseActivity {
+public class CollectsActivity extends BaseActivity {
+    CollectsActivity mContext;
 
-    @BindView(R.id.tv_common_title)
-    TextView mTvCommonTitle;
     @BindView(R.id.tv_refresh)
-    TextView mTvRefresh;
+    TextView mtvRefresh;
     @BindView(R.id.rv)
-    RecyclerView mRv;
+    RecyclerView mrv;
     @BindView(R.id.srl)
-    SwipeRefreshLayout mSrl;
+    SwipeRefreshLayout msrl;
 
-    BoutiqueChildActivity mContext;
-    GoodsAdapter mAdapter;
-    ArrayList<NewGoodsBean> mList;
+    CollectsAdapter mAdapter;
+
+    ArrayList<CollectBean> mList;
     int pageId = 1;
     GridLayoutManager glm;
-    BoutiqueBean boutique;
+    User user=null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_boutique_child);
+        setContentView(R.layout.activity_collects);
         ButterKnife.bind(this);
-        boutique = (BoutiqueBean) getIntent().getSerializableExtra(I.Boutique.CAT_ID);
-        if(boutique == null){
-            finish();
-        }
         mContext = this;
         mList = new ArrayList<>();
-        mAdapter = new GoodsAdapter(mContext,mList);
+        mAdapter = new CollectsAdapter(mContext,mList);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected void initView() {
-        mSrl.setColorSchemeColors(
+        DisplayUtils.initBackWithTitle(mContext, getResources().getString(R.string.collect_title));
+        msrl.setColorSchemeColors(
                 getResources().getColor(R.color.google_blue),
                 getResources().getColor(R.color.google_green),
                 getResources().getColor(R.color.google_red),
                 getResources().getColor(R.color.google_yellow)
         );
         glm = new GridLayoutManager(mContext, I.COLUM_NUM);
-        mRv.setLayoutManager(glm);
-        mRv.setHasFixedSize(true);
-        mRv.setAdapter(mAdapter);
-        mRv.addItemDecoration(new SpaceItemDecoration(12));
-        mTvCommonTitle.setText(boutique.getTitle());
+        mrv.setLayoutManager(glm);
+        mrv.setHasFixedSize(true);
+        mrv.setAdapter(mAdapter);
+        mrv.addItemDecoration(new SpaceItemDecoration(12));
     }
-
 
     @Override
     protected void setListener() {
@@ -81,62 +78,65 @@ public class BoutiqueChildActivity extends BaseActivity {
     }
 
     private void setPullDownListener() {
-        mSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        msrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSrl.setRefreshing(true);
-                mTvRefresh.setVisibility(View.VISIBLE);
+                msrl.setRefreshing(true);
+                mtvRefresh.setVisibility(View.VISIBLE);
                 pageId = 1;
-                downloadNewGoods(I.ACTION_PULL_DOWN);
+                downloadCollect(I.ACTION_PULL_DOWN);
             }
         });
     }
 
-    private void downloadNewGoods(final int action) {
-        NetDao.downloadNewGoods(mContext,boutique.getId(), pageId, new OkHttpUtils.OnCompleteListener<NewGoodsBean[]>() {
+    private void downloadCollect(final int action) {
+        user = FuLiCenterApplication.getUser();
+        if(user==null){
+            finish();
+        }
+        NetDao.downloadCollect(mContext, user.getMuserName(), pageId, new OkHttpUtils.OnCompleteListener<CollectBean[]>() {
             @Override
-            public void onSuccess(NewGoodsBean[] result) {
-                mSrl.setRefreshing(false);
-                mTvRefresh.setVisibility(View.GONE);
+            public void onSuccess(CollectBean[] result) {
+                msrl.setRefreshing(false);
+                mtvRefresh.setVisibility(View.GONE);
                 mAdapter.setMore(true);
-                L.e("result="+result);
-                if(result!=null && result.length>0){
-                    ArrayList<NewGoodsBean> list = ConvertUtils.array2List(result);
-                    if(action==I.ACTION_DOWNLOAD || action == I.ACTION_PULL_DOWN) {
+                if (result != null && result.length > 0) {
+                    ArrayList<CollectBean> list = ConvertUtils.array2List(result);
+                    if (action == I.ACTION_DOWNLOAD || action == I.ACTION_PULL_DOWN) {
                         mAdapter.initData(list);
-                    }else{
+                    } else {
                         mAdapter.addData(list);
                     }
-                    if(list.size()<I.PAGE_SIZE_DEFAULT){
+                    if (list.size() < I.PAGE_SIZE_DEFAULT) {
                         mAdapter.setMore(false);
                     }
-                }else{
+                } else {
                     mAdapter.setMore(false);
                 }
             }
 
             @Override
             public void onError(String error) {
-                mSrl.setRefreshing(false);
-                mTvRefresh.setVisibility(View.GONE);
+                msrl.setRefreshing(false);
+                mtvRefresh.setVisibility(View.GONE);
                 mAdapter.setMore(false);
                 CommonUtils.showShortToast(error);
-                L.e("error:"+error);
+                L.e("error:" + error);
             }
         });
     }
 
     private void setPullUpListener() {
-        mRv.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mrv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastPosition = glm.findLastVisibleItemPosition();
-                if(newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastPosition == mAdapter.getItemCount()-1
-                        && mAdapter.isMore()){
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && lastPosition == mAdapter.getItemCount() - 1
+                        && mAdapter.isMore()) {
                     pageId++;
-                    downloadNewGoods(I.ACTION_PULL_UP);
+                    downloadCollect(I.ACTION_PULL_UP);
                 }
             }
 
@@ -144,18 +144,14 @@ public class BoutiqueChildActivity extends BaseActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int firstPosition = glm.findFirstVisibleItemPosition();
-                mSrl.setEnabled(firstPosition==0);
+                msrl.setEnabled(firstPosition == 0);
             }
         });
     }
 
     @Override
     protected void initData() {
-        downloadNewGoods(I.ACTION_DOWNLOAD);
+        downloadCollect(I.ACTION_DOWNLOAD);
     }
 
-    @OnClick(R.id.backClickArea)
-    public void onClick() {
-        MFGT.finish(this);
-    }
 }

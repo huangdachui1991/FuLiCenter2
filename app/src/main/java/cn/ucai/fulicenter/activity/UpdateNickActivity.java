@@ -23,19 +23,18 @@ import cn.ucai.fulicenter.utils.ResultUtils;
 import cn.ucai.fulicenter.view.DisplayUtils;
 
 public class UpdateNickActivity extends BaseActivity {
-    private static final String TAG=UpdateNickActivity.class.getSimpleName();
+    private static final String TAG =  UpdateNickActivity.class.getSimpleName();
 
     @BindView(R.id.et_update_user_name)
-    EditText metUpdateUserName;
+    EditText mEtUpdateUserName;
     UpdateNickActivity mContext;
-
-    User user=null;
+    User user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_update_nick);
         ButterKnife.bind(this);
-        mContext=this;
+        mContext = this;
         super.onCreate(savedInstanceState);
     }
 
@@ -48,9 +47,9 @@ public class UpdateNickActivity extends BaseActivity {
     protected void initData() {
         user = FuLiCenterApplication.getUser();
         if(user!=null){
-            metUpdateUserName.setText(user.getMuserNick());
-            metUpdateUserName.setSelectAllOnFocus(true);
-        }else {
+            mEtUpdateUserName.setText(user.getMuserNick());
+            mEtUpdateUserName.setSelectAllOnFocus(true);
+        }else{
             finish();
         }
     }
@@ -63,15 +62,12 @@ public class UpdateNickActivity extends BaseActivity {
     @OnClick(R.id.btn_save)
     public void checkNick() {
         if(user!=null){
-            //拿到新写入的昵称nick；
-            String nick = metUpdateUserName.getText().toString().trim();
-            if(nick.equals(user.getMuserName())){
-                //吐司判断昵称和之前一样：未修改
+            String nick = mEtUpdateUserName.getText().toString().trim();
+            if(nick.equals(user.getMuserNick())){
                 CommonUtils.showLongToast(R.string.update_nick_fail_unmodify);
-            }else if (TextUtils.isEmpty(nick)){
-                //判断新写入的昵称不能为空
+            }else if(TextUtils.isEmpty(nick)){
                 CommonUtils.showLongToast(R.string.nick_name_connot_be_empty);
-            }else {
+            }else{
                 updateNick(nick);
             }
         }
