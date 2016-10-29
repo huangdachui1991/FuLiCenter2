@@ -27,7 +27,7 @@
         android:id="@+id/tv_cart_good_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="衣服衣服衣服衣服衣服衣服"
+        android:text="衬衣衬衣衬衣衬衣衬衣衬衣衬衣衬衣衬衣衬衣衬衣衬衣衬衣衬衣"
         android:layout_toRightOf="@+id/iv_cart_thumb"
         android:layout_marginTop="5dp"
         android:textColor="#f90"
