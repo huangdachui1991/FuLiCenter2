@@ -17,10 +17,14 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.GoodsDetailsBean;
+import cn.ucai.fulicenter.bean.MessageBean;
+import cn.ucai.fulicenter.net.NetDao;
+import cn.ucai.fulicenter.net.OkHttpUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
 
 /**
@@ -48,12 +52,11 @@ public class CartAdapter extends Adapter<CartAdapter.CartViewHolder> {
         final CartBean cartBean = mList.get(position);
         GoodsDetailsBean goods = cartBean.getGoods();
         if(goods!=null) {
-            ImageLoader.downloadImg(mContext, holder.mIvCartThumb,
-                    goods.getGoodsThumb());
+            ImageLoader.downloadImg(mContext, holder.mIvCartThumb, goods.getGoodsThumb());
             holder.mTvCartGoodName.setText(goods.getGoodsName());
             holder.mTvCartPrice.setText(goods.getCurrencyPrice());
         }
-        holder.mTvCartCount.setText("(" + cartBean.getCount() + ")");
+        holder.mTvCartCount.setText("("+cartBean.getCount()+")");
         holder.mCbCartSelected.setChecked(false);
         holder.mCbCartSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -62,6 +65,7 @@ public class CartAdapter extends Adapter<CartAdapter.CartViewHolder> {
                 mContext.sendBroadcast(new Intent(I.BROADCAST_UPDATA_CART));
             }
         });
+        holder.mIvCartAdd.setTag(position);
     }
 
     @Override
@@ -93,6 +97,51 @@ public class CartAdapter extends Adapter<CartAdapter.CartViewHolder> {
         CartViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        @OnClick(R.id.iv_cart_add)
+        public void addCart(){
+            final int position = (int) mIvCartAdd.getTag();
+            CartBean cart = mList.get(position);
+            NetDao.updateCart(mContext, cart.getId(), cart.getCount() + 1, new OkHttpUtils.OnCompleteListener<MessageBean>() {
+                @Override
+                public void onSuccess(MessageBean result) {
+                    if(result!=null && result.isSuccess()){
+                        mList.get(position).setCount(mList.get(position).getCount()+1);
+                        mContext.sendBroadcast(new Intent(I.BROADCAST_UPDATA_CART));
+                        mTvCartCount.setText("("+(mList.get(position).getCount())+")");
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+        }
+        @OnClick(R.id.iv_cart_del)
+        public void delCart(){
+            final int position = (int) mIvCartAdd.getTag();
+            CartBean cart = mList.get(position);
+            if(cart.getCount()>1) {
+                NetDao.updateCart(mContext, cart.getId(), cart.getCount() - 1, new OkHttpUtils.OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if (result != null && result.isSuccess()) {
+                            mList.get(position).setCount(mList.get(position).getCount() - 1);
+                            mContext.sendBroadcast(new Intent(I.BROADCAST_UPDATA_CART));
+                            mTvCartCount.setText("(" + (mList.get(position).getCount()) + ")");
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
+            }else{
+
+            }
         }
     }
 }
