@@ -7,6 +7,8 @@ import cn.ucai.fulicenter.utils.MFGT;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+    //用于被继承
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
