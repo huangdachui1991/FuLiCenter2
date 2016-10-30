@@ -33,6 +33,7 @@ import cn.ucai.fulicenter.net.OkHttpUtils;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.ConvertUtils;
 import cn.ucai.fulicenter.utils.L;
+import cn.ucai.fulicenter.utils.MFGT;
 import cn.ucai.fulicenter.utils.ResultUtils;
 import cn.ucai.fulicenter.view.SpaceItemDecoration;
 
@@ -40,7 +41,7 @@ import cn.ucai.fulicenter.view.SpaceItemDecoration;
  * Created by huangdachui on 2016/10/30.
  */
 
-public class CartFragment extends BaseFragment{
+public class CartFragment extends BaseFragment {
     private static final String TAG = CartFragment.class.getSimpleName();
     @BindView(R.id.tv_refresh)
     TextView mTvRefresh;
@@ -48,6 +49,10 @@ public class CartFragment extends BaseFragment{
     RecyclerView mRv;
     @BindView(R.id.srl)
     SwipeRefreshLayout mSrl;
+    LinearLayoutManager llm;
+    MainActivity mContext;
+    CartAdapter mAdapter;
+    ArrayList<CartBean> mList;
     @BindView(R.id.tv_cart_sum_price)
     TextView mTvCartSumPrice;
     @BindView(R.id.tv_cart_save_price)
@@ -58,12 +63,7 @@ public class CartFragment extends BaseFragment{
     TextView mTvNothing;
 
     updateCartReceiver mReceiver;
-
-
-    LinearLayoutManager llm;
-    MainActivity mContext;
-    CartAdapter mAdapter;
-    ArrayList<CartBean> mList;
+    String cartIds="";
 
     @Nullable
     @Override
@@ -97,7 +97,7 @@ public class CartFragment extends BaseFragment{
     }
 
     @Override
-    protected  void initData() {
+    protected void initData() {
         downloadCart();
     }
 
@@ -133,9 +133,8 @@ public class CartFragment extends BaseFragment{
         }
     }
 
-
     @Override
-    protected  void initView() {
+    protected void initView() {
         mSrl.setColorSchemeColors(
                 getResources().getColor(R.color.google_blue),
                 getResources().getColor(R.color.google_green),
@@ -149,6 +148,7 @@ public class CartFragment extends BaseFragment{
         mRv.addItemDecoration(new SpaceItemDecoration(12));
         setCartLayout(false);
     }
+
     private void setCartLayout(boolean hasCart) {
         mLayoutCart.setVisibility(hasCart?View.VISIBLE:View.GONE);
         mTvNothing.setVisibility(hasCart?View.GONE:View.VISIBLE);
@@ -156,12 +156,23 @@ public class CartFragment extends BaseFragment{
         sumPrice();
     }
 
+    @OnClick(R.id.tv_cart_buy)
+    public void buy() {
+        if(cartIds!=null && !cartIds.equals("") && cartIds.length()>0){
+            MFGT.gotoBuy(mContext,cartIds);
+        }else{
+            CommonUtils.showLongToast(R.string.order_nothing);
+        }
+    }
+
     private void sumPrice(){
+        cartIds = "";
         int sumPrice = 0;
         int rankPrice = 0;
         if(mList!=null && mList.size()>0){
             for (CartBean c:mList){
                 if(c.isChecked()){
+                    cartIds += c.getId()+",";
                     sumPrice += getPrice(c.getGoods().getCurrencyPrice())*c.getCount();
                     rankPrice += getPrice(c.getGoods().getRankPrice())*c.getCount();
                 }
@@ -170,6 +181,7 @@ public class CartFragment extends BaseFragment{
             mTvCartSavePrice.setText("节省:￥"+Double.valueOf(sumPrice-rankPrice));
 
         }else{
+            cartIds = "";
             mTvCartSumPrice.setText("合计:￥0");
             mTvCartSavePrice.setText("节省:￥0");
         }
@@ -178,17 +190,14 @@ public class CartFragment extends BaseFragment{
         price = price.substring(price.indexOf("￥")+1);
         return Integer.valueOf(price);
     }
-    class updateCartReceiver extends BroadcastReceiver {
+    class updateCartReceiver extends BroadcastReceiver{
 
         @Override
         public void onReceive(Context context, Intent intent) {
             L.e(TAG,"updateCartReceiver...");
             sumPrice();
+            setCartLayout(mList!=null&&mList.size()>0);
         }
-    }
-
-    @OnClick(R.id.tv_cart_buy)
-    public void onClick() {
     }
 
     @Override
@@ -197,6 +206,13 @@ public class CartFragment extends BaseFragment{
         if(mReceiver!=null){
             mContext.unregisterReceiver(mReceiver);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        L.e(TAG,"onResume.......");
+        initData();
     }
 
 

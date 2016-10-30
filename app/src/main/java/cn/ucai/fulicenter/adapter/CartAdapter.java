@@ -26,6 +26,7 @@ import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.net.NetDao;
 import cn.ucai.fulicenter.net.OkHttpUtils;
 import cn.ucai.fulicenter.utils.ImageLoader;
+import cn.ucai.fulicenter.utils.MFGT;
 
 /**
  * Created by huangdachui on 2016/10/28.
@@ -57,7 +58,7 @@ public class CartAdapter extends Adapter<CartAdapter.CartViewHolder> {
             holder.mTvCartPrice.setText(goods.getCurrencyPrice());
         }
         holder.mTvCartCount.setText("("+cartBean.getCount()+")");
-        holder.mCbCartSelected.setChecked(false);
+        holder.mCbCartSelected.setChecked(cartBean.isChecked());
         holder.mCbCartSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -99,6 +100,13 @@ public class CartAdapter extends Adapter<CartAdapter.CartViewHolder> {
             ButterKnife.bind(this, view);
         }
 
+        @OnClick({R.id.iv_cart_thumb,R.id.tv_cart_good_name,R.id.tv_cart_price})
+        public void gotoDetail(){
+            final int position = (int) mIvCartAdd.getTag();
+            CartBean cart = mList.get(position);
+            MFGT.gotoGoodsDetailsActivity(mContext,cart.getGoodsId());
+        }
+
         @OnClick(R.id.iv_cart_add)
         public void addCart(){
             final int position = (int) mIvCartAdd.getTag();
@@ -119,6 +127,7 @@ public class CartAdapter extends Adapter<CartAdapter.CartViewHolder> {
                 }
             });
         }
+
         @OnClick(R.id.iv_cart_del)
         public void delCart(){
             final int position = (int) mIvCartAdd.getTag();
@@ -140,7 +149,21 @@ public class CartAdapter extends Adapter<CartAdapter.CartViewHolder> {
                     }
                 });
             }else{
+                NetDao.deleteCart(mContext, cart.getId(), new OkHttpUtils.OnCompleteListener<MessageBean>() {
+                    @Override
+                    public void onSuccess(MessageBean result) {
+                        if(result!=null && result.isSuccess()){
+                            mList.remove(position);
+                            mContext.sendBroadcast(new Intent(I.BROADCAST_UPDATA_CART));
+                            notifyDataSetChanged();
+                        }
+                    }
 
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
             }
         }
     }

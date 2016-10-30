@@ -39,4 +39,8 @@
     <string name="update_user_avatar_fail">更新用户头像失败</string>
     <string name="update_user_avatar_success">更新用户头像成功</string>
     <string name="collect_title">收藏的宝贝</string>
+    <string name="add_goods_success">成功添加购物车</string>
+    <string name="add_goods_fail">添加购物车失败</string>
+    <string name="order_nothing">还没有选择宝贝</string>
+    <string name="confirm_order">确认订单</string>
 </resources>
