@@ -24,6 +24,7 @@ import cn.ucai.fulicenter.utils.ResultUtils;
 import cn.ucai.fulicenter.view.DisplayUtils;
 
 public class OrderActivity extends BaseActivity {
+
     private static final String TAG = OrderActivity.class.getSimpleName();
 
     @BindView(R.id.ed_order_name)
@@ -116,7 +117,7 @@ public class OrderActivity extends BaseActivity {
     protected void setListener() {
 
     }
-
+    //订单收货人信息
     @OnClick(R.id.tv_order_buy)
     public void checkOrder() {
         String receiveName=mEdOrderName.getText().toString();
